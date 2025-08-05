@@ -3,6 +3,76 @@
   backdrop-filter: blur(10px);
 }
 
+.hello__div {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+  max-width: 600px;
+}
+.hello__svg {
+  fill: none;
+  stroke: #fff;
+  stroke-linecap: round;
+  stroke-miterlimit: 10;
+  stroke-width: 48px;
+  stroke-dasharray: 5800px;
+  stroke-dashoffset: 5800px;
+  animation: anim__hello linear 5s forwards;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin: 0 auto;
+  text-align: center;
+}
+
+@keyframes anim__hello {
+  0% {
+    stroke-dashoffset: 5800;
+  }
+  25% {
+    stroke-dashoffset: 5800;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animated-path {
+  fill: white; /* Hide fill for drawing effect */
+  stroke: white;
+  stroke-width: 1;
+  stroke-dasharray: 2911;
+  stroke-dashoffset: 29;
+  animation: draw 4s ease forwards;
+}
+
+.text-container {
+  font-size: 1.5rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-weight: 500;
+  display: inline-block;
+  white-space: pre;
+}
+
+.cursor {
+  display: inline-block;
+  width: 1px;
+  height: 1.5em;
+  background-color: black;
+  margin-left: 2px;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
 .summaryText {
   border: 2px solid rgb(255 255 255 / 0%);
   border-radius: 0.7rem;
@@ -24,34 +94,39 @@ input:focus {
 }
 
 .drag_drop_modal {
-    opacity: 1;
-    animation-name: fadeInOpacity;
-    animation-iteration-count: 1;
-    animation-timing-function: ease-in;
-    animation-duration: 0.29s;
-  }
+  opacity: 1;
+  animation-name: fadeInOpacity;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in;
+  animation-duration: 0.29s;
+}
 
-  .hello{
+.hello {
+  opacity: 1;
+  animation-name: fadeOutOpacity;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-out;
+  animation-duration: 0.29s;
+}
+@keyframes fadeInOpacity {
+  0% {
+    opacity: 0;
+  }
+  100% {
     opacity: 1;
-    animation-name: fadeOutOpacity;
-    animation-iteration-count: 1;
-    animation-timing-function: ease-out;
-    animation-duration: 0.29s;
   }
-  @keyframes fadeInOpacity {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
+}
 
-  @keyframes fadeOutOpacity {
-    0% {
-      opacity: 100;
-    }
-    100% {
-      opacity: 0;
-    }
+@keyframes fadeOutOpacity {
+  0% {
+    opacity: 100;
   }
+  100% {
+    opacity: 0;
+  }
+}
+
+.bg {
+  transition: ease-in-out 1s;
+  /* transform: translateX(-10); */
+}

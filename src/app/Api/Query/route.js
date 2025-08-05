@@ -8,21 +8,25 @@ const client = new OpenAI({
     "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",
 });
 export const POST = async (req) => {
-  const body = await req.json();
+  const { question, sumamry } = await req.json();
+
+  console.log(question, "ques");
+  console.log(sumamry, "summ");
 
   const completion = await client.chat.completions.create({
     model: "meta-llama/llama-3.3-70b-instruct:free",
     messages: [
       {
         role: "system",
-        content: `${JSON.stringify(body)}`,
+        content: `You are a helpful assistant. Use this summary to answer question:\n\n${sumamry}`,
       },
+      { role: "user", content: question },
     ],
   });
 
   return NextResponse.json({
     success: true,
-    message: body,
-    sumamry: completion.choices[0].message.content,
+    message: sumamry,
+    answer: completion.choices[0].message.content,
   });
 };
