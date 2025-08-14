@@ -19,6 +19,9 @@
     "pdfjs-lib": "^0.0.149",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-draggable": "^4.5.0",
+    "react-markdown": "^10.1.0",
+    "react-moveable": "^0.56.0",
     "react-redux": "^9.2.0",
     "react-simple-typewriter": "^5.0.1"
   },

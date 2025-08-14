@@ -4,8 +4,7 @@ const { NextResponse } = require("next/server");
 
 const client = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
-  apiKey:
-    "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",
+  apiKey: process.env.LLM_API_Key,
 });
 export const POST = async (req) => {
   const body = await req.json();

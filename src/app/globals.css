@@ -38,3 +38,23 @@ body {
   justify-content: center;
 }
 
+ol {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.7rem;
+}
+
+
+
+.answering-text {
+  animation: pulse 1.5s infinite alternate;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}

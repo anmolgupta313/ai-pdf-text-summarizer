@@ -98,7 +98,7 @@ function TextInputSummarizer() {
 
   const sendToApi = async (url) => {
     try {
-      const response = await axios.post("/Api", {
+      const response = await axios.post("/Api/Summary", {
         body: url,
       });
 
