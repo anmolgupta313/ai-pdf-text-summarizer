@@ -1,12 +1,15 @@
 "use client";
+
 import cx from "classnames";
 import { useLazyGetSummaryQuery } from "@/app/Redux/createApi";
 import React, { useEffect, useRef, useState } from "react";
 import "./TextInputSummarizer.css";
 import PdfSummarizer from "./PdfSummarizer";
 import axios from "axios";
-
+import ReactMarkdown from "react-markdown";
+import { Typography } from "@mui/material";
 function TextInputSummarizer() {
+  const [isSummarizing, setIsSummarizing] = useState(false);
   const [allArticle, setAllArticle] = useState([]);
 
   const [article, setArticle] = useState({
@@ -59,10 +62,17 @@ function TextInputSummarizer() {
     };
   }, []);
 
-  const [getSummary, { error, isFetching }] = useLazyGetSummaryQuery();
+  useEffect(() => {
+    if (isSummarizing == true) {
+      setIsSummarizing(false);
+    }
+  }, [article.summary]);
+
+  // const [getSummary, { error, isFetching }] = useLazyGetSummaryQuery();
   const submit = async (e) => {
     e.preventDefault();
 
+    setIsSummarizing(true);
     const exsistingArticle = allArticle.find((item) => {
       return item.url == article.url;
     });
@@ -70,16 +80,6 @@ function TextInputSummarizer() {
     if (exsistingArticle) {
       setArticle(exsistingArticle);
     } else {
-      // const { data } = await getSummary({ articleUrl: article.url });
-      // if (data?.summary) {
-      //   const newArticle = { ...article, summary: data.summary };
-      //   const updateArticles = [newArticle, ...allArticle];
-
-      //   setArticle(newArticle);
-      //   setAllArticle(updateArticles);
-
-      //   localStorage.setItem("articles", JSON.stringify(updateArticles));
-
       sendToApi(article.url);
     }
   };
@@ -98,11 +98,9 @@ function TextInputSummarizer() {
 
   const sendToApi = async (url) => {
     try {
-      const response = await axios.post("/Api/Summary", {
+      const response = await axios.post("/Api/Summary/Link", {
         body: url,
       });
-
-      console.log(response.data,"Res")
       const newArticle = { ...article, summary: response.data.sumamry };
       const updateArticles = [newArticle, ...allArticle];
 
@@ -196,6 +194,8 @@ function TextInputSummarizer() {
             value="pdf"
             onClick={(e) => {
               getValue(e);
+
+              setArticle({ url: "", summary: "" });
             }}
           >
             Pdf
@@ -206,7 +206,7 @@ function TextInputSummarizer() {
         <>
           <form
             ref={inputRef}
-            className="form w-[70%] background-glass p-3  justify-center items-center hidden    "
+            className="form w-[100%] md:w-[70%] background-glass p-3  justify-center items-center hidden    "
           >
             <input
               type="url"
@@ -218,16 +218,22 @@ function TextInputSummarizer() {
             />
 
             <button
-              disabled={isFetching}
+              disabled={isSummarizing == true}
               className="submit-btn w-[20%] bg-white p-3 rounded-3xl cursor-pointer "
               onClick={submit}
             >
-              {isFetching ? " Summarizing.." : "Submit"}
+              <Typography
+                className={
+                  isSummarizing == true ? "answering-text" : "answertext"
+                }
+              >
+                {isSummarizing == true ? " Summarizing.." : "Submit"}
+              </Typography>
             </button>
           </form>
           <div
             ref={historyRef}
-            className="hsitory-div hidden gap-3 w-[70%] overflow-x-auto  "
+            className="hsitory-div hidden gap-3  w-[100%] md:w-[70%] overflow-x-auto  "
           >
             {allArticle.map((item, index) => {
               return (
@@ -246,7 +252,7 @@ function TextInputSummarizer() {
           </div>
           {article.summary != "" && (
             <div className="summaryText background-glass w-[70%]">
-              <p>{article.summary}</p>
+              <ReactMarkdown>{article.summary}</ReactMarkdown>
             </div>
           )}{" "}
         </>

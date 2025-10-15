@@ -58,3 +58,16 @@ ol {
     opacity: 1;
   }
 }
+
+
+.my-div {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* Define transition for opacity and transform */
+}
+
+.my-div.mounted {
+  opacity: 1;
+  transform: translateY(0);
+}
+

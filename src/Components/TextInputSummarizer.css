@@ -79,6 +79,7 @@
   box-shadow: 0 8px 32px #0000001c;
   padding: 1rem;
   line-height: 2rem;
+  transition: 0.8s ease-in-out;
 }
 
 .form {
