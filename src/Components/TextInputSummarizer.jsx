@@ -1,4 +1,5 @@
 "use client";
+import CloseIcon from "@mui/icons-material/Close";
 
 import cx from "classnames";
 import React, { useEffect, useRef, useState } from "react";
@@ -250,7 +251,16 @@ function TextInputSummarizer() {
             })}
           </div>
           {article.summary != "" && (
-            <div className="summaryText background-glass  w-[100%] md:w-[70%]">
+            <div className="summaryText background-glass  w-[100%] md:w-[70%] relative">
+              <div
+                onClick={() => {
+                  setArticle({ url: "", summary: "" });
+                }}
+                className=" flex justify-end absolute right-1 top-1"
+              >
+                <CloseIcon sx={{ fontSize: "1.3rem", cursor:"pointer" }} className="bg-white rounded-4xl p-0.5" />
+              </div>
+
               <ReactMarkdown>{article.summary}</ReactMarkdown>
             </div>
           )}{" "}
