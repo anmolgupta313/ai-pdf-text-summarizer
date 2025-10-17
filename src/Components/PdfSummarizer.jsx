@@ -28,7 +28,6 @@ function PdfSummarizer() {
   const chatDivRef = useRef(null);
 
   const [progress, setProgress] = useState("");
-  // const [question, setQuestion] = useState("how many years of experience");
   const { transcript, listening } = useSpeechRecognition();
   function onFileChange(e) {
     const file = e.target.files[0];
@@ -184,7 +183,6 @@ Do not make up information.
         SetHandleListening(false);
       }, 690);
 
-      // Return a cleanup function to clear the timeout
       return () => {
         clearTimeout(listeningSwitch);
       };
@@ -193,7 +191,6 @@ Do not make up information.
         SetHandleListening(true);
       }, 300);
 
-      // Return a cleanup function to clear the timeout
       return () => {
         clearTimeout(listeningSwitch);
       };
@@ -242,8 +239,8 @@ Do not make up information.
         {sumamry != "" && (
           <div className="flex justify-center items-end gap-6 w-full max-h-[600px]">
             <div
-              className={`summaryText background-glass max-h-[85%] overflow-auto transition-all duration-2000 ease-in-out ${
-                animation ? "w-[60%]" : "w-[100%]"
+              className={`summaryText background-glass max-h-[85%] overflow-auto transition-all duration-2000 ease-in-out w-[100%] ${
+                animation ? "md:w-[60%]" : "md:w-[100%]"
               } `}
             >
               {sumamry?.sections?.map((section, idx) => (
@@ -263,15 +260,15 @@ Do not make up information.
             {openChatBox == false && (
               <ChatIcon
                 onClick={handleChatBox}
-                className="w-[100%] bg-[#ffffff3d] rounded-4xl p-1.5 cursor-pointer"
+                className="w-[100%] bg-[#ffffff3d] rounded-4xl p-1.5 cursor-pointer md:relative fixed right-3 bottom-3"
                 sx={{ fontSize: "2.5rem", boxShadow: "0 8px 30px #00000040" }}
               />
             )}
 
             {openChatBox && (
               <div
-                className={`flex gap-3 flex-col max-h-[85%] h-[100%] justify-end transition-all duration-2000 ease-in-out relative ${
-                  animation ? "w-[30%]" : "w-[0%]"
+                className={`flex gap-3 flex-col max-h-[85%] min-h-[15%]  md:h-[100%] justify-end transition-all duration-2000 ease-in-out md:relative fixed bottom-2 w-[100%] ${
+                  animation ? "md:w-[30%]" : "md:w-[0%]"
                 }
     ${
       openChatBox ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"
@@ -280,7 +277,7 @@ Do not make up information.
               >
                 <CloseIcon
                   onClick={handleChatBox}
-                  className="absolute z-10 right-[28px] top-4 cursor-pointer"
+                  className="absolute z-10 right-[15px] top-4 cursor-pointer"
                 />
                 {question.length > 0 && (
                   <div
@@ -293,7 +290,7 @@ Do not make up information.
                           <div className="background-glass px-5 py-3 rounded-xl flex w-[100%] justify-between ">
                             {" "}
                             <div className="w-[50%] text-start ml-4 py-2">
-                              <p
+                              <div
                                 className={
                                   question.answer == ""
                                     ? "answering-text"
@@ -305,7 +302,7 @@ Do not make up information.
                                     ? "answering"
                                     : question.answer}
                                 </ReactMarkdown>
-                              </p>
+                              </div>
                             </div>
                             <div className="w-[50%] text-end mr-4 py-2">
                               <p>{question.question}</p>

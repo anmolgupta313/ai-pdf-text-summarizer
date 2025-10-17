@@ -1,7 +1,6 @@
 "use client";
 
 import cx from "classnames";
-import { useLazyGetSummaryQuery } from "@/app/Redux/createApi";
 import React, { useEffect, useRef, useState } from "react";
 import "./TextInputSummarizer.css";
 import PdfSummarizer from "./PdfSummarizer";
@@ -219,7 +218,7 @@ function TextInputSummarizer() {
 
             <button
               disabled={isSummarizing == true}
-              className="submit-btn w-[20%] bg-white p-3 rounded-3xl cursor-pointer "
+              className="submit-btn  w-[35%] md:w-[20%] bg-white p-3 rounded-3xl cursor-pointer "
               onClick={submit}
             >
               <Typography
@@ -251,7 +250,7 @@ function TextInputSummarizer() {
             })}
           </div>
           {article.summary != "" && (
-            <div className="summaryText background-glass w-[70%]">
+            <div className="summaryText background-glass  w-[100%] md:w-[70%]">
               <ReactMarkdown>{article.summary}</ReactMarkdown>
             </div>
           )}{" "}
