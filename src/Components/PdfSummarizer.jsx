@@ -197,6 +197,10 @@ Do not make up information.
     }
   }, [listening]);
 
+  useEffect(() => {
+    setProgress(0);
+  }, [sumamry]);
+
   function handleChatBox() {
     setAnimation((prev) => {
       return !prev;
@@ -221,12 +225,18 @@ Do not make up information.
             onChange={onFileChange}
             className="url_input pl-3 peer-focus:border-gray-700 peer-focus:text-gray-700 w-[80%] background"
           />{" "}
-          {sumamry == "" && (
-            <div className={sumamry == "" ? "answering-text" : "answertext"}>
+          {(sumamry == "" || progress == 100) && (
+            <div
+              className={
+                sumamry == "" || (sumamry !== "" && progress == 100)
+                  ? "answering-text"
+                  : "answertext"
+              }
+            >
               {progress < 100 ? (
                 <CustomizedProgressBars progress={progress} />
-              ) : sumamry == "" ? (
-                "Summarizing"
+              ) : progress === 100 ? (
+                "Summarizing..."
               ) : (
                 ""
               )}

@@ -7,7 +7,8 @@ import "./TextInputSummarizer.css";
 import PdfSummarizer from "./PdfSummarizer";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
-import { Typography } from "@mui/material";
+import { IconButton, Typography } from "@mui/material";
+
 function TextInputSummarizer() {
   const [isSummarizing, setIsSummarizing] = useState(false);
   const [allArticle, setAllArticle] = useState([]);
@@ -96,12 +97,24 @@ function TextInputSummarizer() {
     setBtnValue(e.target.value);
   }
 
+  function deleteHistory(e) {
+    const filterDel = allArticle.filter((_, index) => {
+      return index != e.currentTarget.dataset.id;
+    });
+
+    setAllArticle(filterDel);
+    localStorage.setItem("articles", JSON.stringify(filterDel));
+  }
+
   const sendToApi = async (url) => {
     try {
       const response = await axios.post("/Api/Summary/Link", {
         body: url,
       });
-      const newArticle = { ...article, summary: response.data.sumamry };
+      const newArticle = {
+        ...article,
+        summary: response.data.sumamry,
+      };
       const updateArticles = [newArticle, ...allArticle];
 
       setArticle(newArticle);
@@ -237,16 +250,32 @@ function TextInputSummarizer() {
           >
             {allArticle.map((item, index) => {
               return (
-                <button
-                  className="background-glass
+                <div
+                  className="relative background-glass
             px-4 py-2 rounded-3xl"
-                  onClick={(e) => {
-                    historyButton(e, index, item);
-                  }}
-                  value={index}
                 >
-                  {item.url.slice(0, 21) + "..."}
-                </button>
+                  <button
+                    onClick={(e) => {
+                      historyButton(e, index, item);
+                    }}
+                    value={index}
+                  >
+                    {item.url.slice(0, 21) + "..."}
+                  </button>
+                  <IconButton
+                    className="absolute top-0 "
+                    data-id={index}
+                    onClick={(e) => {
+                      deleteHistory(e);
+                    }}
+                  >
+                    {" "}
+                    <CloseIcon
+                      sx={{ fontSize: "1rem", cursor: "pointer" }}
+                      className="bg-white rounded-4xl p-0.5"
+                    />
+                  </IconButton>
+                </div>
               );
             })}
           </div>
@@ -258,7 +287,10 @@ function TextInputSummarizer() {
                 }}
                 className=" flex justify-end absolute right-1 top-1"
               >
-                <CloseIcon sx={{ fontSize: "1.3rem", cursor:"pointer" }} className="bg-white rounded-4xl p-0.5" />
+                <CloseIcon
+                  sx={{ fontSize: "1.1rem", cursor: "pointer" }}
+                  className="bg-white rounded-4xl p-0.5"
+                />
               </div>
 
               <ReactMarkdown>{article.summary}</ReactMarkdown>

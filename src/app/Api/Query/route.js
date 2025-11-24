@@ -3,7 +3,7 @@ import OpenAI from "openai";
 const { NextResponse } = require("next/server");
 
 const client = new OpenAI({
-  baseURL: "https://openrouter.ai/api/v1",
+  // baseURL: "https://openrouter.ai/api/v1",
   apiKey: process.env.LLM_API_Key,
 });
 export const POST = async (req) => {
@@ -13,7 +13,7 @@ export const POST = async (req) => {
   console.log(rawSumamry, "summ");
 
   const completion = await client.chat.completions.create({
-    model: "meta-llama/llama-3.3-70b-instruct:free",
+    model: "gpt-5",
     messages: [
       {
         role: "system",
