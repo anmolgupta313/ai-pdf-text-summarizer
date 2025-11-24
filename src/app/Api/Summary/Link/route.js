@@ -22,7 +22,7 @@ export const POST = async (req) => {
 
     const prompt = `
 You are GPT-5.1. Summarize the following website text into a deep,.
-Do NOT include HTML or code and scripts if it does get that in content then just return webiste is ristricted. Summarize as if you had full page access.
+Do NOT include HTML or code and scripts if it does get that in content then just return webiste is ristricted.
 
 
 TEXT CONTENT STARTS BELOW:
