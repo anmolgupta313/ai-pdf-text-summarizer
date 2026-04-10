@@ -15,11 +15,14 @@
     "@mui/material": "^7.3.2",
     "@reduxjs/toolkit": "^2.8.2",
     "axios": "^1.11.0",
+    "bcryptjs": "^3.0.3",
     "cheerio": "^1.1.2",
     "classnames": "^2.5.1",
     "dotenv": "^16.5.0",
     "framer-motion": "^12.17.0",
-    "next": "15.3.8",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.4.1",
+    "next": "15.3.3",
     "openai": "^5.8.3",
     "pdfjs-lib": "^0.0.149",
     "react": "^19.0.0",
@@ -29,7 +32,8 @@
     "react-moveable": "^0.56.0",
     "react-redux": "^9.2.0",
     "react-simple-typewriter": "^5.0.1",
-    "react-speech-recognition": "^4.0.1"
+    "react-speech-recognition": "^4.0.1",
+    "unpdf": "^1.4.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

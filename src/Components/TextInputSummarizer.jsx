@@ -9,7 +9,7 @@ import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import { IconButton, Typography } from "@mui/material";
 
-function TextInputSummarizer() {
+function TextInputSummarizer({ user }) {
   const [isSummarizing, setIsSummarizing] = useState(false);
   const [allArticle, setAllArticle] = useState([]);
 
@@ -48,12 +48,12 @@ function TextInputSummarizer() {
       addToClassList([helloRef], ["hello"]);
       addToClassList(
         [inputRef, historyRef, welcomeRef, buttonRef],
-        ["drag_drop_modal", "flex"]
+        ["drag_drop_modal", "flex"],
       );
 
       removeToClassList(
         [inputRef, historyRef, welcomeRef, buttonRef],
-        "hidden"
+        "hidden",
       );
     };
     setInterval(helloInterval, 4500);
@@ -189,7 +189,7 @@ function TextInputSummarizer() {
         <div>
           <button
             className={cx(
-              "rounded-2xl w-[100%] px-6.5 py-.5 cursor-pointer btn background-glass "
+              "rounded-2xl w-[100%] px-6.5 py-.5 cursor-pointer btn background-glass ",
             )}
             value="url"
             onClick={(e) => {
@@ -202,7 +202,7 @@ function TextInputSummarizer() {
         <div>
           <button
             className={cx(
-              "rounded-2xl w-[100%] px-6.5 py-.5 cursor-pointer background-glass"
+              "rounded-2xl w-[100%] px-6.5 py-.5 cursor-pointer background-glass",
             )}
             value="pdf"
             onClick={(e) => {
@@ -299,7 +299,10 @@ function TextInputSummarizer() {
         </>
       ) : (
         <>
-          <PdfSummarizer />
+          {/* <PdfSummarizer />
+           */}
+
+          <PdfSummarizer user={user} />
         </>
       )}
     </div>
