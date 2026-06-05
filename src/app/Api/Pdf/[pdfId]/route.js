@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { unlink } from "fs/promises";
-import { join } from "path";
+// import { unlink } from "fs/promises";
+// import { join } from "path";
 import { connectDB } from "@/lib/mongodb";
 import { PDF, ChatSession, Message } from "@/models";
 import { getAuthUser } from "@/lib/auth";
@@ -28,11 +28,11 @@ export const DELETE = async (req, { params }) => {
     }
 
     // Delete the physical file from disk (don't crash if already gone)
-    try {
-      await unlink(join(process.cwd(), pdf.filePath));
-    } catch {
-      // file already missing — ignore
-    }
+    // try {
+    //   await unlink(join(process.cwd(), pdf.filePath));
+    // } catch {
+    //   // file already missing — ignore
+    // }
 
     // Find all sessions for this PDF then delete their messages
     const sessionIds = await ChatSession.find({ pdfId }).distinct("_id");

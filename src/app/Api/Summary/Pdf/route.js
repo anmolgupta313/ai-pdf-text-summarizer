@@ -58,7 +58,7 @@ export const POST = async (req) => {
       if (!authUser) {
         return NextResponse.json(
           { success: false, error: "Not authenticated" },
-          { status: 401 }
+          { status: 401 },
         );
       }
 
@@ -68,7 +68,7 @@ export const POST = async (req) => {
       if (!file || file.type !== "application/pdf") {
         return NextResponse.json(
           { success: false, error: "A PDF file is required" },
-          { status: 400 }
+          { status: 400 },
         );
       }
 
@@ -79,9 +79,9 @@ export const POST = async (req) => {
 
       // Save file to /uploads
       const filename = `${Date.now()}-${file.name.replace(/\s+/g, "_")}`;
-      const uploadDir = join(process.cwd(), "uploads");
-      await mkdir(uploadDir, { recursive: true });
-      await writeFile(join(uploadDir, filename), buffer);
+      // const uploadDir = join(process.cwd(), "uploads");
+      // await mkdir(uploadDir, { recursive: true });
+      // await writeFile(join(uploadDir, filename), buffer);
 
       // Extract text with unpdf — no browser APIs needed
       const { text: extractedText, pageCount } = await extractPdfText(buffer);
@@ -94,7 +94,7 @@ export const POST = async (req) => {
         userId: authUser.userId,
         filename,
         originalName: file.name,
-        filePath: `uploads/${filename}`,
+        // filePath: `uploads/${filename}`,
         extractedText,
         summary: summaryRaw,
         pageCount,
@@ -110,7 +110,7 @@ export const POST = async (req) => {
       console.error("[Summary/Pdf upload error]", err);
       return NextResponse.json(
         { success: false, error: err.message || "Upload failed" },
-        { status: 500 }
+        { status: 500 },
       );
     }
   }
@@ -126,14 +126,17 @@ export const POST = async (req) => {
       if (!authUser) {
         return NextResponse.json(
           { success: false, error: "Not authenticated" },
-          { status: 401 }
+          { status: 401 },
         );
       }
-      const pdf = await PDF.findOne({ _id: body.pdfId, userId: authUser.userId });
+      const pdf = await PDF.findOne({
+        _id: body.pdfId,
+        userId: authUser.userId,
+      });
       if (!pdf) {
         return NextResponse.json(
           { success: false, error: "PDF not found" },
-          { status: 404 }
+          { status: 404 },
         );
       }
       // Return cached summary instantly — no GPT call needed
@@ -149,7 +152,7 @@ export const POST = async (req) => {
     console.error("[Summary/Pdf json error]", err);
     return NextResponse.json(
       { success: false, error: err.message || "Summarisation failed" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 };

@@ -35,7 +35,6 @@ function PdfSummarizer({ user }) {
   const [sessionId, setSessionId] = useState(null);
   const [sessions, setSessions] = useState([]);
   const [pdfList, setPdfList] = useState([]);
-  const { setBtnValue } = useAuth();
   const { transcript, listening } = useSpeechRecognition();
 
   // Load user's PDF library on mount (only when logged in)
@@ -324,7 +323,7 @@ Only include meaningful content. Do not make up information.
 
           {/* PDF Library (logged-in users) */}
           {user && pdfList.length > 0 && (
-            <div className="flex justify-center">
+            <div className="flex justify-center mt-[1.5rem]">
               <div className="background-glass rounded-4xl py-3 px-5 max-w-[310px] xs:max-w-[360px] sm:max-w-[400px]">
                 <p className="font-semibold mb-2">Your PDFs</p>
                 <div className="flex gap-2  relative overflow-x-scroll max-w-[100%]">
