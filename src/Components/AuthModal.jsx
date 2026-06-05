@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useAuth } from "./AuthProvider";
 import CloseIcon from "@mui/icons-material/Close";
 
-function AuthModal({ onClose, setBtnValue }) {
-  const { login, register } = useAuth();
+function AuthModal({ onClose }) {
+  const { login, register, setBtnValue } = useAuth();
   const [mode, setMode] = useState("login");
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");

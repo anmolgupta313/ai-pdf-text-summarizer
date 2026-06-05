@@ -8,7 +8,6 @@ import CustomizedProgressBars from "./ProgressBar";
 import MicIcon from "@mui/icons-material/Mic";
 import StopIcon from "@mui/icons-material/Stop";
 import DeleteIcon from "@mui/icons-material/Delete";
-
 import CloseIcon from "@mui/icons-material/Close";
 import ChatIcon from "@mui/icons-material/Chat";
 import HistoryIcon from "@mui/icons-material/History";
@@ -17,8 +16,8 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import { Typography } from "@mui/material";
 import AuthModal from "./AuthModal";
-
-function PdfSummarizer({ user, setBtnValue }) {
+import { useAuth } from "./AuthProvider";
+function PdfSummarizer({ user }) {
   const [summary, setSummary] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [question, setQuestion] = useState([]);
@@ -36,7 +35,7 @@ function PdfSummarizer({ user, setBtnValue }) {
   const [sessionId, setSessionId] = useState(null);
   const [sessions, setSessions] = useState([]);
   const [pdfList, setPdfList] = useState([]);
-
+  const { setBtnValue } = useAuth();
   const { transcript, listening } = useSpeechRecognition();
 
   // Load user's PDF library on mount (only when logged in)
@@ -531,7 +530,7 @@ Only include meaningful content. Do not make up information.
           </div>
         </div>
       ) : (
-        showModal == true && <AuthModal setBtnValue={setBtnValue} onClose={() => setShowModal(false)} />
+        showModal == true && <AuthModal onClose={() => setShowModal(false)} />
       )}
     </div>
   );

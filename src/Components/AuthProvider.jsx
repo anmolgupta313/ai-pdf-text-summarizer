@@ -5,7 +5,8 @@ import { createContext, useContext, useEffect, useState } from "react";
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(undefined); 
+  const [user, setUser] = useState(undefined);
+  const [btnValue, setBtnValue] = useState("url");
 
   useEffect(() => {
     fetch("/Api/Auth/Me")
@@ -42,7 +43,9 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>
+    <AuthContext.Provider
+      value={{ user, login, register, logout, btnValue, setBtnValue }}
+    >
       {children}
     </AuthContext.Provider>
   );

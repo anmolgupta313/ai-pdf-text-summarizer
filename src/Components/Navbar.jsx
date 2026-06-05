@@ -1,12 +1,11 @@
 "use client";
 
-
 import { useState } from "react";
 import { useAuth } from "./AuthProvider";
 import AuthModal from "./AuthModal";
 
 function Navbar() {
-  const { user, logout } = useAuth();
+  const { user, logout, setBtnValue, btnValue } = useAuth();
   const [showModal, setShowModal] = useState(false);
 
   if (user === undefined) return null;
@@ -21,7 +20,10 @@ function Navbar() {
             <>
               <span className="text-sm opacity-70">Hi, {user.name}</span>
               <button
-                onClick={logout}
+                onClick={() => {
+                  logout();
+                  return setBtnValue !== "url" && setBtnValue("url");
+                }}
                 className="submit-btn dark:text-black bg-white px-4 py-1.5 rounded-2xl cursor-pointer text-sm"
               >
                 Sign out

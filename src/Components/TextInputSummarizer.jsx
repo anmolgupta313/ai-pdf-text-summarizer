@@ -8,6 +8,7 @@ import PdfSummarizer from "./PdfSummarizer";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import { IconButton, Typography } from "@mui/material";
+import { useAuth } from "./AuthProvider";
 
 function TextInputSummarizer({ user }) {
   const [isSummarizing, setIsSummarizing] = useState(false);
@@ -23,7 +24,7 @@ function TextInputSummarizer({ user }) {
   const historyRef = useRef();
   const welcomeRef = useRef();
   const buttonRef = useRef();
-  const [btnValue, setBtnValue] = useState("url");
+  const { btnValue, setBtnValue } = useAuth();
 
   function addToClassList(divArray, classname = []) {
     return divArray.map((div) => {
@@ -299,9 +300,7 @@ function TextInputSummarizer({ user }) {
         </>
       ) : (
         <>
-        
-
-          <PdfSummarizer user={user} setBtnValue={setBtnValue} />
+          <PdfSummarizer user={user} />
         </>
       )}
     </div>

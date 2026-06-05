@@ -4,7 +4,6 @@ const { NextResponse } = require("next/server");
 import * as cheerio from "cheerio";
 
 const client = new OpenAI({
-  // baseURL: "https://openrouter.ai/api/v1",
   apiKey: process.env.LLM_API_Key,
 });
 export const POST = async (req) => {
@@ -34,7 +33,6 @@ TEXT CONTENT ENDS HERE.
     const completion = await client.chat.completions.create({
       model: "gpt-5.1",
 
-      // "meta-llama/llama-3.3-70b-instruct:free",
       messages: [
         {
           role: "system",

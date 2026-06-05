@@ -136,4 +136,4 @@ dist
 .pnp.*
 
 #upload folder
-uploads/
+# uploads/
