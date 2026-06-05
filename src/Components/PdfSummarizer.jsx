@@ -290,8 +290,8 @@ Only include meaningful content. Do not make up information.
       {user ? (
         <div>
           <div className="flex justify-center flex-col items-center">
-            <div className="background-glass w-[310px] xs:max-w-[360px] sm:max-w-[400px] rounded-4xl py-3 flex flex-col justify-center items-center text-center ">
-              <p>PDF Upload</p>
+            <div className="background-glass w-[330px] xs:max-w-[360px] sm:max-w-[400px] rounded-4xl py-3 flex flex-col justify-center items-center text-center ">
+              <p className=" font-semibold dark:font-bold">PDF Upload</p>
               <label
                 htmlFor="file"
                 className="url_input pl-3 peer-focus:border-gray-700 peer-focus:text-gray-700 w-[80%] background cursor-pointer"
@@ -311,7 +311,7 @@ Only include meaningful content. Do not make up information.
               {summary == "" && <p> {fileName}</p>}
               {(summary === "" || progress === 100) && (
                 <div
-                  className={`dark:text-black ${
+                  className={`dark:text-white ${
                     progress === 100 ? "answering-text" : "answertext"
                   }`}
                 >
