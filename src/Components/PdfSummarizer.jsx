@@ -16,7 +16,6 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import { Typography } from "@mui/material";
 import AuthModal from "./AuthModal";
-import { useAuth } from "./AuthProvider";
 function PdfSummarizer({ user }) {
   const [summary, setSummary] = useState("");
   const [inputValue, setInputValue] = useState("");
@@ -36,7 +35,7 @@ function PdfSummarizer({ user }) {
   const [sessions, setSessions] = useState([]);
   const [pdfList, setPdfList] = useState([]);
   const { transcript, listening } = useSpeechRecognition();
-
+  const [fileName, setFileName] = useState("");
   // Load user's PDF library on mount (only when logged in)
   useEffect(() => {
     if (!user) return;
@@ -61,8 +60,9 @@ function PdfSummarizer({ user }) {
 
   async function onFileChange(e) {
     const file = e.target.files[0];
+    console.log(file.name, "namefile");
     if (!file) return;
-
+    setFileName(file.name);
     setProgress(0);
     setSummary("");
     setQuestion([]);
@@ -290,31 +290,35 @@ Only include meaningful content. Do not make up information.
       {user ? (
         <div>
           <div className="flex justify-center flex-col items-center">
-            <div className="background-glass max-w-[85%] rounded-4xl py-3 flex flex-col justify-center items-center text-center ">
+            <div className="background-glass w-[310px] xs:max-w-[360px] sm:max-w-[400px] rounded-4xl py-3 flex flex-col justify-center items-center text-center ">
               <p>PDF Upload</p>
-              <input
-                type="file"
-                accept="application/pdf"
-                name="file"
-                id="file"
-                onChange={onFileChange}
+              <label
+                htmlFor="file"
                 className="url_input pl-3 peer-focus:border-gray-700 peer-focus:text-gray-700 w-[80%] background cursor-pointer"
-              />
+              >
+                {" "}
+                Choose File
+                <input
+                  value=""
+                  type="file"
+                  accept="application/pdf"
+                  name="file"
+                  id="file"
+                  onChange={onFileChange}
+                  className="hidden url_input pl-3 peer-focus:border-gray-700 peer-focus:text-gray-700 w-[80%] background cursor-pointer"
+                />
+              </label>
+              {summary == "" && <p> {fileName}</p>}
               {(summary === "" || progress === 100) && (
                 <div
-                  className={[
-                    `dark:text-black`,
-                    summary === "" || (summary !== "" && progress === 100)
-                      ? "answering-text"
-                      : "answertext",
-                  ]}
+                  className={`dark:text-black ${
+                    progress === 100 ? "answering-text" : "answertext"
+                  }`}
                 >
                   {progress < 100 ? (
                     <CustomizedProgressBars progress={progress} />
-                  ) : progress === 100 ? (
-                    "Summarizing..."
                   ) : (
-                    ""
+                    <p>Summarizing...</p>
                   )}
                 </div>
               )}
@@ -451,7 +455,7 @@ Only include meaningful content. Do not make up information.
                             <button
                               key={s._id}
                               onClick={() => loadSession(s)}
-                              className="block w-full text-left px-3 py-2 rounded-xl hover:bg-white/20 text-sm mb-1"
+                              className="block w-full text-left px-3 py-2 rounded-xl hover:bg-white/20 text-sm mb-1 cursor-pointer"
                             >
                               {s.title}
                             </button>
