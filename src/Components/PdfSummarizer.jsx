@@ -308,7 +308,7 @@ Only include meaningful content. Do not make up information.
                   className="hidden url_input pl-3 peer-focus:border-gray-700 peer-focus:text-gray-700 w-[80%] background cursor-pointer"
                 />
               </label>
-              {summary == "" && <p> {fileName}</p>}
+              {(summary == "" && progress===100) && <p> {fileName}</p>}
               {(summary === "" || progress === 100) && (
                 <div
                   className={`dark:text-white ${
