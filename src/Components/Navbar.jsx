@@ -13,7 +13,7 @@ function Navbar() {
 
   return (
     <>
-      <nav className="w-full flex justify-between items-center px-8 py-4">
+      <nav className=" dark:bg-black w-full flex justify-between items-center px-8 py-4">
         <span className="font-semibold text-lg">PDF Summarizer</span>
 
         <div className="flex items-center gap-4">
@@ -22,7 +22,7 @@ function Navbar() {
               <span className="text-sm opacity-70">Hi, {user.name}</span>
               <button
                 onClick={logout}
-                className="submit-btn bg-white px-4 py-1.5 rounded-2xl cursor-pointer text-sm"
+                className="submit-btn dark:text-black bg-white px-4 py-1.5 rounded-2xl cursor-pointer text-sm"
               >
                 Sign out
               </button>
@@ -30,7 +30,7 @@ function Navbar() {
           ) : (
             <button
               onClick={() => setShowModal(true)}
-              className="submit-btn bg-white px-4 py-1.5 rounded-2xl cursor-pointer text-sm"
+              className="submit-btn dark:text-black bg-white px-4 py-1.5 rounded-2xl cursor-pointer text-sm"
             >
               Sign in
             </button>

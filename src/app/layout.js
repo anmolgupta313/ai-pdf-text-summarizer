@@ -4,6 +4,7 @@ import { ReduxProvider } from "./Redux/provider";
 import { AuthProvider } from "@/Components/AuthProvider";
 import Navbar from "@/Components/Navbar";
 import Script from "next/script";
+import ThemeProviderWrapper from "@/Components/theme/themeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,14 +23,19 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <AuthProvider>
-          <ReduxProvider>
-            <Navbar />
-            {children}
-          </ReduxProvider>
-        </AuthProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <ThemeProviderWrapper>
+          <AuthProvider>
+            <ReduxProvider>
+              <Navbar />
+              {children}
+            </ReduxProvider>
+          </AuthProvider>
+        </ThemeProviderWrapper>
+
         <Script
           src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/build/pdf.min.js"
           strategy="afterInteractive"

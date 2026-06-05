@@ -5,6 +5,11 @@
   --foreground: #171717;
 }
 
+@variant dark (.dark &);
+
+@theme {
+  --breakpoint-xs: 390px;
+}
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -20,11 +25,8 @@
 }
 
 body {
-  background: linear-gradient(
-      217deg,
-      rgba(255, 159, 237),
-      rgba(255, 0, 0, 0) 70.71%
-    ),
+  background:
+    linear-gradient(217deg, rgba(255, 159, 237), rgba(255, 0, 0, 0) 70.71%),
     linear-gradient(127deg, rgba(118, 164, 255), rgba(0, 255, 0, 0) 65%),
     linear-gradient(336deg, rgba(255, 191, 138), rgba(0, 0, 255, 0) 70.71%);
   color: var(--foreground);
@@ -44,8 +46,6 @@ ol {
   row-gap: 0.7rem;
 }
 
-
-
 .answering-text {
   animation: pulse 1.5s infinite alternate;
 }
@@ -59,15 +59,15 @@ ol {
   }
 }
 
-
 .my-div {
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* Define transition for opacity and transform */
+  transition:
+    opacity 0.5s ease-out,
+    transform 0.5s ease-out;
 }
 
 .my-div.mounted {
   opacity: 1;
   transform: translateY(0);
 }
-

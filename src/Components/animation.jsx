@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 
 const Animation = () => {
@@ -13,7 +13,7 @@ const Animation = () => {
       if (currentIndex === text.length) {
         clearInterval(interval);
       }
-    }, 100); // 100ms per character, adjust as needed
+    }, 100);
 
     return () => clearInterval(interval);
   }, []);

@@ -27,13 +27,13 @@ function TextInputSummarizer({ user }) {
 
   function addToClassList(divArray, classname = []) {
     return divArray.map((div) => {
-      return div.current.classList.add(...classname);
+      return div?.current?.classList.add(...classname);
     });
   }
 
   function removeToClassList(divArray, classname) {
     return divArray.map((div) => {
-      return div.current.classList.remove(classname);
+      return div?.current?.classList.remove(classname);
     });
   }
 
@@ -42,10 +42,11 @@ function TextInputSummarizer({ user }) {
 
     setAllArticle(getArticle);
 
-    const helloInterval = function hello__function() {
-      helloRef.current.style.display = "none";
+    const intervalId = setInterval(() => {
+      helloRef.current?.style && (helloRef.current.style.display = "none");
 
       addToClassList([helloRef], ["hello"]);
+
       addToClassList(
         [inputRef, historyRef, welcomeRef, buttonRef],
         ["drag_drop_modal", "flex"],
@@ -55,12 +56,9 @@ function TextInputSummarizer({ user }) {
         [inputRef, historyRef, welcomeRef, buttonRef],
         "hidden",
       );
-    };
-    setInterval(helloInterval, 4500);
+    }, 4500);
 
-    return () => {
-      clearInterval(helloInterval);
-    };
+    return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
@@ -178,7 +176,7 @@ function TextInputSummarizer({ user }) {
 
       <div className="select-tab-div gap-1.5 hidden relative " ref={buttonRef}>
         <div
-          className="absolute right-0 top-0 bg-amber-50 rounded-2xl z-10 px-6.5 py-.5 capitalize bg cursor-pointer"
+          className="absolute right-0 top-0 bg-amber-50 dark:text-black rounded-2xl z-10 px-6.5 py-.5 capitalize bg cursor-pointer"
           style={{
             transform:
               btnValue == "url" ? "translateX(-82px)" : "translateX(0px)",
@@ -231,8 +229,10 @@ function TextInputSummarizer({ user }) {
             />
 
             <button
-              disabled={isSummarizing == true}
-              className="submit-btn  w-[35%] md:w-[20%] bg-white p-3 rounded-3xl cursor-pointer "
+              disabled={article.url == "" || isSummarizing == true}
+              className={[
+                `submit-btn  w-[35%] md:w-[20%] bg-white dark:text-black p-3 rounded-3xl ${article.url == "" || isSummarizing == true ? "cursor-not-allowed opacity-50" : "cursor-pointer"}  `,
+              ]}
               onClick={submit}
             >
               <Typography
@@ -272,7 +272,7 @@ function TextInputSummarizer({ user }) {
                     {" "}
                     <CloseIcon
                       sx={{ fontSize: "1rem", cursor: "pointer" }}
-                      className="bg-white rounded-4xl p-0.5"
+                      className="bg-white rounded-4xl p-0.5 dark:text-black"
                     />
                   </IconButton>
                 </div>
@@ -289,7 +289,7 @@ function TextInputSummarizer({ user }) {
               >
                 <CloseIcon
                   sx={{ fontSize: "1.1rem", cursor: "pointer" }}
-                  className="bg-white rounded-4xl p-0.5"
+                  className="bg-white rounded-4xl p-0.5 dark:text-black"
                 />
               </div>
 
@@ -299,10 +299,9 @@ function TextInputSummarizer({ user }) {
         </>
       ) : (
         <>
-          {/* <PdfSummarizer />
-           */}
+        
 
-          <PdfSummarizer user={user} />
+          <PdfSummarizer user={user} setBtnValue={setBtnValue} />
         </>
       )}
     </div>

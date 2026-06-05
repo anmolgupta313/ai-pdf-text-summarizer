@@ -1,12 +1,10 @@
-
-
 import { useState } from "react";
 import { useAuth } from "./AuthProvider";
 import CloseIcon from "@mui/icons-material/Close";
 
-function AuthModal({ onClose }) {
+function AuthModal({ onClose, setBtnValue }) {
   const { login, register } = useAuth();
-  const [mode, setMode] = useState("login"); // "login" | "register"
+  const [mode, setMode] = useState("login");
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -42,7 +40,10 @@ function AuthModal({ onClose }) {
     >
       <div className="background-glass rounded-3xl p-8 w-full max-w-md relative">
         <CloseIcon
-          onClick={onClose}
+          onClick={() => {
+            onClose;
+            setBtnValue("url");
+          }}
           className="absolute top-4 right-4 cursor-pointer"
           sx={{ fontSize: "1.2rem" }}
         />
@@ -90,7 +91,7 @@ function AuthModal({ onClose }) {
           <button
             type="submit"
             disabled={loading}
-            className="submit-btn bg-white p-2 rounded-2xl cursor-pointer w-full mt-2"
+            className="submit-btn bg-white dark:text-black p-2 rounded-2xl cursor-pointer w-full mt-2"
           >
             {loading
               ? "Please wait..."

@@ -1,7 +1,6 @@
-// src/models/index.js
 import mongoose from "mongoose";
 
-// ─── User
+// User
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -20,13 +19,13 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Password is required"],
       minlength: 6,
-      select: false, // never returned in queries by default
+      select: false,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-// ─── PDF
+//PDF
 
 const pdfSchema = new mongoose.Schema(
   {
@@ -38,11 +37,11 @@ const pdfSchema = new mongoose.Schema(
     },
     filename: {
       type: String,
-      required: true, 
+      required: true,
     },
     originalName: {
       type: String,
-      required: true, 
+      required: true,
     },
     filePath: {
       type: String,
@@ -52,7 +51,7 @@ const pdfSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    
+
     summary: {
       type: String,
       default: "",
@@ -60,10 +59,10 @@ const pdfSchema = new mongoose.Schema(
     pageCount: { type: Number, default: 0 },
     fileSize: { type: Number, default: 0 }, // bytes
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-// ─── Chat Session
+//Chat Session
 
 const chatSessionSchema = new mongoose.Schema(
   {
@@ -79,16 +78,16 @@ const chatSessionSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
-   
+
     title: {
       type: String,
       default: "New chat",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-// ─── Message
+//Message
 
 const messageSchema = new mongoose.Schema(
   {
@@ -108,14 +107,12 @@ const messageSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-export const User =
-  mongoose.models.User || mongoose.model("User", userSchema);
+export const User = mongoose.models.User || mongoose.model("User", userSchema);
 
-export const PDF =
-  mongoose.models.PDF || mongoose.model("PDF", pdfSchema);
+export const PDF = mongoose.models.PDF || mongoose.model("PDF", pdfSchema);
 
 export const ChatSession =
   mongoose.models.ChatSession ||
