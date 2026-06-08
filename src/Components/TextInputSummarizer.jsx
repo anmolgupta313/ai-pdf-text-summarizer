@@ -13,7 +13,7 @@ import { useAuth } from "./AuthProvider";
 function TextInputSummarizer({ user }) {
   const [isSummarizing, setIsSummarizing] = useState(false);
   const [allArticle, setAllArticle] = useState([]);
-
+  const [timeInterval, setTimeInterval] = useState(4500);
   const [article, setArticle] = useState({
     url: "",
     summary: "",
@@ -57,10 +57,10 @@ function TextInputSummarizer({ user }) {
         [inputRef, historyRef, welcomeRef, buttonRef],
         "hidden",
       );
-    }, 4500);
+    }, timeInterval);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [timeInterval]);
 
   useEffect(() => {
     if (isSummarizing == true) {
@@ -93,7 +93,11 @@ function TextInputSummarizer({ user }) {
   }
 
   function getValue(e) {
-    setBtnValue(e.target.value);
+    const value = e.target.value;
+    setBtnValue(value);
+    setTimeInterval(() => {
+      return value == "pdf" && 0;
+    });
   }
 
   function deleteHistory(e) {
@@ -104,7 +108,6 @@ function TextInputSummarizer({ user }) {
     setAllArticle(filterDel);
     localStorage.setItem("articles", JSON.stringify(filterDel));
   }
-
   const sendToApi = async (url) => {
     try {
       const response = await axios.post("/Api/Summary/Link", {
@@ -218,7 +221,7 @@ function TextInputSummarizer({ user }) {
         <>
           <form
             ref={inputRef}
-            className="form w-[100%] md:w-[70%] background-glass p-3  justify-center items-center hidden    "
+            className="form w-[100%] md:w-[70%] background-glass p-3  justify-center items-center hidden "
           >
             <input
               type="url"
