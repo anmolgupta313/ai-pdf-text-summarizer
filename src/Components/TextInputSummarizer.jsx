@@ -5,11 +5,12 @@ import cx from "classnames";
 import React, { useEffect, useRef, useState } from "react";
 import "./TextInputSummarizer.css";
 import PdfSummarizer from "./PdfSummarizer";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import { IconButton, Typography } from "@mui/material";
 import { useAuth } from "./AuthProvider";
-
 function TextInputSummarizer({ user }) {
   const [isSummarizing, setIsSummarizing] = useState(false);
   const [allArticle, setAllArticle] = useState([]);
@@ -50,7 +51,7 @@ function TextInputSummarizer({ user }) {
 
       addToClassList(
         [inputRef, historyRef, welcomeRef, buttonRef],
-        ["drag_drop_modal", "flex"],
+        ["drag_drop_modal", "flex", "justifyCenter"],
       );
 
       removeToClassList(
@@ -107,6 +108,7 @@ function TextInputSummarizer({ user }) {
 
     setAllArticle(filterDel);
     localStorage.setItem("articles", JSON.stringify(filterDel));
+    setArticle({ url: "", summary: "" });
   }
   const sendToApi = async (url) => {
     try {
@@ -248,41 +250,51 @@ function TextInputSummarizer({ user }) {
               </Typography>
             </button>
           </form>
-          <div
-            ref={historyRef}
-            className="hsitory-div hidden gap-3  w-[100%] md:w-[70%] overflow-x-auto  "
-          >
-            {allArticle.map((item, index) => {
-              return (
-                <div
-                  className="relative background-glass
-            px-4 py-2 rounded-3xl"
-                >
-                  <button
-                    onClick={(e) => {
-                      historyButton(e, index, item);
-                    }}
-                    value={index}
+          {allArticle != "" && (
+            <div
+              ref={historyRef}
+              className="background-glass rounded-4xl py-3 px-5 hsitory-div hidden gap-3 w-[100%] md:w-[70%] overflow-x-auto  "
+            >
+              {allArticle.map((item, index) => {
+                return (
+                  <div
+                    className={`relative flex items-center gap-1 background-glass hover:opacity-90
+            px-3 py-2 rounded-3xl min-w-[240px] max-w-[250px] sm:min-w-[240px] sm:max-w-[240px] ${isSummarizing == true ? "cursor-not-allowed opacity-50 " : "cursor-pointer"} `}
                   >
-                    {item.url.slice(0, 21) + "..."}
-                  </button>
-                  <IconButton
-                    className="absolute top-0 "
-                    data-id={index}
-                    onClick={(e) => {
-                      deleteHistory(e);
-                    }}
-                  >
-                    {" "}
-                    <CloseIcon
-                      sx={{ fontSize: "1rem", cursor: "pointer" }}
-                      className="bg-white rounded-4xl p-0.5 dark:text-black"
-                    />
-                  </IconButton>
-                </div>
-              );
-            })}
-          </div>
+                    <button
+                      className={`${isSummarizing == true ? "cursor-not-allowed opacity-50 " : "cursor-pointer"} `}
+                      onClick={(e) => {
+                        historyButton(e, index, item);
+                      }}
+                      value={index}
+                    >
+                      {item.url.slice(0, 21) + "..."}
+                    </button>
+                    <IconButton
+                      sx={{
+                        fontSize: "2rem",
+                        position: "absolute",
+                        top: ".1rem",
+                        right: ".3rem",
+                      }}
+                      disabled={isSummarizing === true}
+                      data-id={index}
+                      title="Delete url history"
+                      onClick={(e) => {
+                        deleteHistory(e);
+                      }}
+                    >
+                      {" "}
+                      <DeleteIcon
+                        className={`flex justify-center items-center  bg-white rounded-[50%] text-black    transition-colors ${isSummarizing == true ? "cursor-not-allowed opacity-50 " : "cursor-pointer hover:text-red-600 dark:hover:text-white dark:hover:bg-white/50"}`}
+                        sx={{ fontSize: "1.2rem", padding: ".2rem" }}
+                      />
+                    </IconButton>
+                  </div>
+                );
+              })}
+            </div>
+          )}
           {article.summary != "" && (
             <div className="summaryText background-glass  w-[100%] md:w-[70%] relative">
               <div
@@ -303,7 +315,11 @@ function TextInputSummarizer({ user }) {
         </>
       ) : (
         <>
-          <PdfSummarizer user={user} />
+          <PdfSummarizer
+            isSummarizing={isSummarizing}
+            setIsSummarizing={setIsSummarizing}
+            user={user}
+          />
         </>
       )}
     </div>

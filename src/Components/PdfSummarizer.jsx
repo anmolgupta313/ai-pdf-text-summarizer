@@ -1,5 +1,4 @@
 "use client";
-
 import stringToJson from "@/app/Function/stringToJson";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
@@ -16,7 +15,7 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import { Typography } from "@mui/material";
 import AuthModal from "./AuthModal";
-function PdfSummarizer({ user }) {
+function PdfSummarizer({ user, isSummarizing, setIsSummarizing }) {
   const [summary, setSummary] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [question, setQuestion] = useState([]);
@@ -45,7 +44,7 @@ function PdfSummarizer({ user }) {
         if (data.success) setPdfList(data.pdfs);
       })
       .catch(console.error);
-  }, [pdfId]);
+  }, [pdfId, user]);
 
   // Load sessions when a PDF is selected
   useEffect(() => {
@@ -60,15 +59,15 @@ function PdfSummarizer({ user }) {
 
   async function onFileChange(e) {
     const file = e.target.files[0];
-    console.log(file.name, "namefile");
     if (!file) return;
     setFileName(file.name);
     setProgress(0);
     setSummary("");
     setQuestion([]);
     setSessionId(null);
-
     if (user) {
+      setIsSummarizing(true);
+
       // Authenticated: upload to server, get pdfId back
       const formData = new FormData();
       formData.append("pdf", file);
@@ -97,6 +96,7 @@ function PdfSummarizer({ user }) {
       fileReader.onload = onLoadFile;
       fileReader.readAsArrayBuffer(file);
     }
+    setIsSummarizing(false);
   }
 
   // Old client-side flow (unauthenticated only)
@@ -308,7 +308,7 @@ Only include meaningful content. Do not make up information.
                   className="hidden url_input pl-3 peer-focus:border-gray-700 peer-focus:text-gray-700 w-[80%] background cursor-pointer"
                 />
               </label>
-              {(summary == "" && progress===100) && <p> {fileName}</p>}
+              {summary == "" && progress === 100 && <p> {fileName}</p>}
               {(summary === "" || progress === 100) && (
                 <div
                   className={`dark:text-white ${
@@ -326,22 +326,22 @@ Only include meaningful content. Do not make up information.
           </div>
 
           {/* PDF Library (logged-in users) */}
-          {user && pdfList.length > 0 && (
-            <div className="flex justify-center mt-[1.5rem]">
+          {(pdfList.length > 0 || user.email) && (
+            <div className="flex justify-center mt-[1.5rem] drag_drop_modal">
               <div className="background-glass rounded-4xl py-3 px-5 max-w-[310px] xs:max-w-[360px] sm:max-w-[400px]">
                 <p className="font-semibold mb-2">Your PDFs</p>
                 <div className="flex gap-2  relative overflow-x-scroll max-w-[100%]">
                   {pdfList.map((pdf) => (
                     <div
+                      onClick={() => loadPdfFromHistory(pdf)}
                       key={pdf._id}
-                      className={`relative flex items-center gap-1 background-glass rounded-3xl text-sm cursor-pointer hover:opacity-80 min-w-fit py-2 px-3 ${
-                        pdfId === pdf._id ? "ring-1 ring-white/60" : ""
-                      }`}
+                      className={`relative flex items-center gap-1 background-glass rounded-3xl text-sm cursor-pointer hover:opacity-90 min-w-fit py-2 px-3
+                        ${isAnswering == true || isSummarizing == true ? "pointer-events-none opacity-50" : ""} ${pdfId === pdf._id ? "ring-1 ring-white/60" : ""} 
+                     `}
                     >
                       <button
-                        disabled={isAnswering === true}
-                        onClick={() => loadPdfFromHistory(pdf)}
-                        className={`pr-4 ${isAnswering === true ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
+                        disabled={isAnswering == true || isSummarizing === true}
+                        className={`pr-4 ${isAnswering == true || isSummarizing == true ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
                       >
                         {pdf.originalName.length > 21
                           ? pdf.originalName.slice(0, 21) + "..."
@@ -349,10 +349,10 @@ Only include meaningful content. Do not make up information.
                       </button>
                       {/* Delete PDF button */}
                       <button
-                        disabled={isAnswering === true}
+                        disabled={isAnswering == true || isSummarizing === true}
                         onClick={(e) => deletePdf(e, pdf)}
                         sx={{ fontSize: "2rem" }}
-                        className={`flex justify-center items-center  bg-white rounded-[50%] text-black    transition-colors ${isAnswering === true ? "cursor-not-allowed opacity-50 " : "cursor-pointer hover:text-red-600 dark:hover:text-white dark:hover:bg-white/50"}`}
+                        className={`flex justify-center items-center  bg-white rounded-[50%] text-black    transition-colors ${isAnswering == true || isSummarizing == true ? "cursor-not-allowed opacity-50 " : "cursor-pointer hover:text-red-600 dark:hover:text-white dark:hover:bg-white/50"}`}
                         title="Delete PDF"
                       >
                         <DeleteIcon
@@ -368,9 +368,9 @@ Only include meaningful content. Do not make up information.
 
           <div className="flex gap-5 max-h-[50%]">
             {summary !== "" && (
-              <div className="flex justify-center items-end sm:gap-6 w-full max-h-[600px]">
+              <div className=" relative flex justify-center items-end sm:gap-6 w-full max-h-[600px]">
                 <div
-                  className={`summaryText background-glass max-h-[85%] overflow-auto transition-all duration-2000 ease-in-out w-[100%] ${animation ? "md:w-[60%]" : "md:w-[100%]"}`}
+                  className={`relative summaryText background-glass max-h-[85%] overflow-auto transition-all duration-2000 ease-in-out w-[100%] ${animation ? "md:w-[60%]" : "md:w-[100%]"}`}
                 >
                   {summary?.sections?.map((section, idx) => (
                     <div key={idx} className="mb-6">
@@ -384,6 +384,17 @@ Only include meaningful content. Do not make up information.
                       ))}
                     </div>
                   ))}
+                  <div
+                    onClick={() => {
+                      setSummary("");
+                    }}
+                    className=" flex justify-end absolute right-1 top-1"
+                  >
+                    <CloseIcon
+                      sx={{ fontSize: "1.1rem", cursor: "pointer" }}
+                      className="bg-white rounded-4xl p-0.5 dark:text-black"
+                    />
+                  </div>
                 </div>
 
                 <div className="flex flex-col gap-2">
@@ -405,7 +416,10 @@ Only include meaningful content. Do not make up information.
                     ref={moveableRef}
                   >
                     <CloseIcon
-                      onClick={handleChatBox}
+                      onClick={() => {
+                        handleChatBox();
+                        setOpenHistory(openHistory == true && false);
+                      }}
                       sx={{ fontSize: "1rem" }}
                       className="absolute z-10  right-[36px] top-4 cursor-pointer"
                     />
