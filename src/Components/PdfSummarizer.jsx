@@ -326,7 +326,7 @@ Only include meaningful content. Do not make up information.
           </div>
 
           {/* PDF Library (logged-in users) */}
-          {(pdfList.length > 0 || user.email) && (
+          {(pdfList.length > 0 ) && (
             <div className="flex justify-center mt-[1.5rem] drag_drop_modal">
               <div className="background-glass rounded-4xl py-3 px-5 max-w-[310px] xs:max-w-[360px] sm:max-w-[400px]">
                 <p className="font-semibold mb-2">Your PDFs</p>
