@@ -13,7 +13,7 @@ function Navbar() {
   return (
     <>
       <nav className=" dark:bg-black w-full flex justify-between items-center px-8 py-4">
-        <span className="font-semibold text-lg">PDF Summarizer</span>
+        <span className="font-semibold text-lg">Summarizer</span>
 
         <div className="flex items-center gap-4">
           {user ? (
