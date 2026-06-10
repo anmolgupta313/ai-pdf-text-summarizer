@@ -2,8 +2,8 @@
 
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
-import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
+// import { writeFile, mkdir } from "fs/promises";
+// import { join } from "path";
 import { extractText, getDocumentProxy } from "unpdf";
 import { connectDB } from "@/lib/mongodb";
 import { PDF } from "@/models";

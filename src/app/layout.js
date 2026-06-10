@@ -5,7 +5,7 @@ import { AuthProvider } from "@/Components/AuthProvider";
 import Navbar from "@/Components/Navbar";
 import Script from "next/script";
 import ThemeProviderWrapper from "@/Components/theme/themeProvider";
-
+import { Analytics } from "@vercel/analytics/react";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -32,6 +32,7 @@ export default function RootLayout({ children }) {
             <ReduxProvider>
               <Navbar />
               {children}
+              <Analytics />
             </ReduxProvider>
           </AuthProvider>
         </ThemeProviderWrapper>

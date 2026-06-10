@@ -72,7 +72,6 @@ function TextInputSummarizer({ user }) {
   // const [getSummary, { error, isFetching }] = useLazyGetSummaryQuery();
   const submit = async (e) => {
     e.preventDefault();
-
     setIsSummarizing(true);
     const exsistingArticle = allArticle.find((item) => {
       return item.url == article.url;
