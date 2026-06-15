@@ -40,7 +40,6 @@ async function summariseText(text) {
   return completion.choices[0].message.content;
 }
 
-// ── Extract text from PDF buffer using unpdf (Node/Edge safe) ────────────────
 async function extractPdfText(buffer) {
   const uint8Array = new Uint8Array(buffer);
   const pdf = await getDocumentProxy(uint8Array);
@@ -51,7 +50,6 @@ async function extractPdfText(buffer) {
 export const POST = async (req) => {
   const contentType = req.headers.get("content-type") || "";
 
-  // ── Path A: new file upload (multipart/form-data) ─────────────────────────
   if (contentType.includes("multipart/form-data")) {
     try {
       const authUser = await getAuthUser();
