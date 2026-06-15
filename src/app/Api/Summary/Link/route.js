@@ -41,6 +41,8 @@ async function fetchYouTubeTranscript(videoId) {
         .replace(/\s+/g, " ")
         .trim();
     } catch {
+      console.error("Transcript Error:", err);
+
       return null;
     }
   }
@@ -130,8 +132,10 @@ export const POST = async (req) => {
 
     // const prompt =`You summarize website content in depth.`
 
-    const prompt =  contentSource === "youtube"
-        ? `Summarize this YouTube video ${contentText}`:`Summarize this webpage content from ${url}`;
+    const prompt =
+      contentSource === "youtube"
+        ? `Summarize this YouTube video ${contentText}`
+        : `Summarize this webpage content from ${url}`;
     const completion = await client.chat.completions.create({
       model: "gpt-5.1",
 
