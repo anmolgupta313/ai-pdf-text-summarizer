@@ -18,54 +18,31 @@ function getYouTubeVideoId(url) {
   return null;
 }
 
-// async function fetchYouTubeTranscript(videoId) {
-//   try {
-//     const transcriptItems = await YoutubeTranscript.fetchTranscript(videoId, {
-//       lang: "en",
-//     });
-
-//     if (!transcriptItems || transcriptItems.length === 0) return null;
-
-//     return transcriptItems
-//       .map((item) => item.text)
-//       .join(" ")
-//       .replace(/\s+/g, " ")
-//       .trim();
-//   } catch {
-//     try {
-//       const transcriptItems = await YoutubeTranscript.fetchTranscript(videoId);
-//       if (!transcriptItems || transcriptItems.length === 0) return null;
-//       return transcriptItems
-//         .map((item) => item.text)
-//         .join(" ")
-//         .replace(/\s+/g, " ")
-//         .trim();
-//     } catch {
-//       console.error("Transcript Error:", err);
-
-//       return null;
-//     }
-//   }
-// }
-
 async function fetchYouTubeTranscript(videoId) {
   try {
-    const transcriptItems =
-      await YoutubeTranscript.fetchTranscript(videoId, {
-        lang: "en",
-      });
+    const transcriptItems = await YoutubeTranscript.fetchTranscript(videoId, {
+      lang: "en",
+    });
 
-    return transcriptItems;
-  } catch (err) {
-    console.error("First attempt failed:", err);
+    if (!transcriptItems || transcriptItems.length === 0) return null;
 
+    return transcriptItems
+      .map((item) => item.text)
+      .join(" ")
+      .replace(/\s+/g, " ")
+      .trim();
+  } catch {
     try {
-      const transcriptItems =
-        await YoutubeTranscript.fetchTranscript(videoId);
+      const transcriptItems = await YoutubeTranscript.fetchTranscript(videoId);
+      if (!transcriptItems || transcriptItems.length === 0) return null;
+      return transcriptItems
+        .map((item) => item.text)
+        .join(" ")
+        .replace(/\s+/g, " ")
+        .trim();
+    } catch {
+      console.error("Transcript Error:", err);
 
-      return transcriptItems;
-    } catch (err2) {
-      console.error("Second attempt failed:", err2);
       return null;
     }
   }
