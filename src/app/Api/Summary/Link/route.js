@@ -1,11 +1,15 @@
 import OpenAI from "openai";
 // import { YoutubeTranscript } from "youtube-transcript";
-
+import { Supadata } from "@supadata/js";
 const { NextResponse } = require("next/server");
 import * as cheerio from "cheerio";
 
 const client = new OpenAI({
   apiKey: process.env.LLM_API_Key,
+});
+
+const supadata = new Supadata({
+  apiKey: process.env.SUPDATA_API_KEY,
 });
 
 function getYouTubeVideoId(url) {
@@ -16,56 +20,6 @@ function getYouTubeVideoId(url) {
     if (uTube.hostname === "youtu.be") return uTube.pathname.slice(1);
   } catch {}
   return null;
-}
-
-// async function fetchYouTubeTranscript(videoId) {
-//   try {
-//     const transcriptItems = await YoutubeTranscript.fetchTranscript(videoId, {
-//       lang: "en",
-//     });
-
-//     if (!transcriptItems || transcriptItems.length === 0) return null;
-
-//     return transcriptItems
-//       .map((item) => item.text)
-//       .join(" ")
-//       .replace(/\s+/g, " ")
-//       .trim();
-//   } catch {
-//     try {
-//       const transcriptItems = await YoutubeTranscript.fetchTranscript(videoId);
-//       if (!transcriptItems || transcriptItems.length === 0) return null;
-//       return transcriptItems
-//         .map((item) => item.text)
-//         .join(" ")
-//         .replace(/\s+/g, " ")
-//         .trim();
-//     } catch {
-//       return null;
-//     }
-//   }
-// }
-
-async function fetchYouTubeTranscript(videoId) {
-  const proxyUrl = process.env.YT_PROXY_URL;
-  const secret = process.env.PROXY_SECRET;
-
-  if (!proxyUrl)
-    throw new Error("YT_PROXY_URL is not set in environment variables.");
-
-  const res = await fetch(`${proxyUrl}/transcript?videoId=${videoId}`, {
-    headers: {
-      "x-proxy-secret": secret || "",
-    },
-  });
-
-  const data = await res.json();
-
-  if (!res.ok || !data.success) {
-    throw new Error(data.error || "Proxy returned an error.");
-  }
-
-  return data.transcript || null;
 }
 
 export const POST = async (req) => {
@@ -113,9 +67,16 @@ export const POST = async (req) => {
     const videoId = getYouTubeVideoId(url);
     if (videoId) {
       contentSource = "youtube";
-      const transcript = await fetchYouTubeTranscript(videoId);
+      // const transcript = await fetchYouTubeTranscript(videoId);
 
-      if (!transcript) {
+      const transcriptResult = await supadata.transcript({
+        url: `https://www.youtube.com/watch?v=${videoId}`,
+        lang: "en",
+        text: true,
+        mode: "auto",
+      });
+
+      if (!transcriptResult) {
         return NextResponse.json({
           success: false,
           error:
@@ -123,7 +84,7 @@ export const POST = async (req) => {
             "The video may have captions disabled or be age-restricted.",
         });
       }
-      contentText = transcript;
+      contentText = transcriptResult.content;
     } else {
       contentText = text;
 
