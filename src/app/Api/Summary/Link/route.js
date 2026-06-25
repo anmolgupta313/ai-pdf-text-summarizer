@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { YoutubeTranscript } from "youtube-transcript";
+// import { YoutubeTranscript } from "youtube-transcript";
 
 const { NextResponse } = require("next/server");
 import * as cheerio from "cheerio";
@@ -18,35 +18,56 @@ function getYouTubeVideoId(url) {
   return null;
 }
 
+// async function fetchYouTubeTranscript(videoId) {
+//   try {
+//     const transcriptItems = await YoutubeTranscript.fetchTranscript(videoId, {
+//       lang: "en",
+//     });
+
+//     if (!transcriptItems || transcriptItems.length === 0) return null;
+
+//     return transcriptItems
+//       .map((item) => item.text)
+//       .join(" ")
+//       .replace(/\s+/g, " ")
+//       .trim();
+//   } catch {
+//     try {
+//       const transcriptItems = await YoutubeTranscript.fetchTranscript(videoId);
+//       if (!transcriptItems || transcriptItems.length === 0) return null;
+//       return transcriptItems
+//         .map((item) => item.text)
+//         .join(" ")
+//         .replace(/\s+/g, " ")
+//         .trim();
+//     } catch {
+//       return null;
+//     }
+//   }
+// }
+
 async function fetchYouTubeTranscript(videoId) {
-  try {
-    const transcriptItems = await YoutubeTranscript.fetchTranscript(videoId, {
-      lang: "en",
-    });
+  const proxyUrl = process.env.YT_PROXY_URL;
+  const secret = process.env.PROXY_SECRET;
 
-    if (!transcriptItems || transcriptItems.length === 0) return null;
+  if (!proxyUrl)
+    throw new Error("YT_PROXY_URL is not set in environment variables.");
 
-    return transcriptItems
-      .map((item) => item.text)
-      .join(" ")
-      .replace(/\s+/g, " ")
-      .trim();
-  } catch {
-    try {
-      const transcriptItems = await YoutubeTranscript.fetchTranscript(videoId);
-      if (!transcriptItems || transcriptItems.length === 0) return null;
-      return transcriptItems
-        .map((item) => item.text)
-        .join(" ")
-        .replace(/\s+/g, " ")
-        .trim();
-    } catch {
-      console.error("Transcript Error:", err);
+  const res = await fetch(`${proxyUrl}/transcript?videoId=${videoId}`, {
+    headers: {
+      "x-proxy-secret": secret || "",
+    },
+  });
 
-      return null;
-    }
+  const data = await res.json();
+
+  if (!res.ok || !data.success) {
+    throw new Error(data.error || "Proxy returned an error.");
   }
+
+  return data.transcript || null;
 }
+
 export const POST = async (req) => {
   try {
     const body = await req.json();
