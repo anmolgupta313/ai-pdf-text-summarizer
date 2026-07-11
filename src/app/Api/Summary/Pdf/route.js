@@ -8,6 +8,7 @@ import { extractText, getDocumentProxy } from "unpdf";
 import { connectDB } from "@/lib/mongodb";
 import { PDF } from "@/models";
 import { getAuthUser } from "@/lib/auth";
+import { encrypt, decrypt } from "@/lib/crypto";
 
 const client = new OpenAI({ apiKey: process.env.LLM_API_Key });
 
@@ -83,9 +84,11 @@ export const POST = async (req) => {
 
       // Extract text with unpdf — no browser APIs needed
       const { text: extractedText, pageCount } = await extractPdfText(buffer);
-
+      const encryptedText = encrypt(extractedText);
       // Summarise with GPT
       const summaryRaw = await summariseText(extractedText);
+
+      const encryptedSummary = encrypt(summaryRaw);
 
       // Save to MongoDB
       const pdf = await PDF.create({
@@ -93,16 +96,19 @@ export const POST = async (req) => {
         filename,
         originalName: file.name,
         // filePath: `uploads/${filename}`,
-        extractedText,
-        summary: summaryRaw,
+        extractedText: encryptedText,
+        // extractedText,
+        summary: encryptedSummary,
         pageCount,
         fileSize: buffer.length,
       });
 
+      const decryptedSummary = decrypt(encryptedSummary);
+
       return NextResponse.json({
         success: true,
         pdfId: pdf._id,
-        sumamry: summaryRaw, // typo kept to match stringToJson helper
+        sumamry: decryptedSummary, // typo kept to match stringToJson helper
       });
     } catch (err) {
       console.error("[Summary/Pdf upload error]", err);
@@ -137,14 +143,16 @@ export const POST = async (req) => {
           { status: 404 },
         );
       }
-      // Return cached summary instantly — no GPT call needed
       if (pdf.summary) {
-        return NextResponse.json({ success: true, sumamry: pdf.summary });
+        const decryptedSummary = decrypt(pdf.summary);
+
+        return NextResponse.json({ success: true, sumamry: decryptedSummary });
       }
-      text = pdf.extractedText;
+      text = decrypt(pdf.extractedText);
     }
 
     const summaryRaw = await summariseText(text);
+
     return NextResponse.json({ success: true, sumamry: summaryRaw });
   } catch (err) {
     console.error("[Summary/Pdf json error]", err);
