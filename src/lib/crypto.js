@@ -1,6 +1,5 @@
 
-import crypto from "crypto";
-
+const crypto = require("crypto");
 const ALGORITHM = "aes-256-gcm";
 const KEY_HEX = process.env.ENCRYPTION_KEY; // must be 64 hex chars = 32 bytes
 
